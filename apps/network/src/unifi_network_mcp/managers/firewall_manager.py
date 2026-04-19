@@ -622,24 +622,7 @@ class FirewallManager:
             # Log the payload for debugging, ensuring sensitive data isn't exposed if necessary
             # logger.debug("Firewall policy create payload: %s", json.dumps(policy_data, indent=2))
 
-            # Apply required defaults that the UniFi v2 API mandates but callers may omit
-            defaults: Dict[str, Any] = {
-                "ip_version": "IPV4",
-                "schedule": {"mode": "ALWAYS", "repeat_on_days": [], "time_all_day": False},
-                "connection_state_type": "ALL",
-                "connection_states": [],
-                "create_allow_respond": True,
-                "description": "",
-                "predefined": False,
-                "protocol": "all",
-                "match_ip_sec": False,
-                "match_opposite_protocol": False,
-                "icmp_typename": "ANY",
-                "icmp_v6_typename": "ANY",
-            }
-            merged_data = {**defaults, **policy_data}
-
-            api_request = ApiRequestV2(method="post", path="/firewall-policies", data=merged_data)
+            api_request = ApiRequestV2(method="post", path="/firewall-policies", data=policy_data)
 
             response = await self._connection.request(api_request)
 
